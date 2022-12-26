@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.mjubilee.communitiessapims.model.Person;
 
-public interface PersonRepository extends JpaRepository<Person, BigDecimal> {
+public interface PersonRepository extends JpaRepository<Person, Long> {
 
 }

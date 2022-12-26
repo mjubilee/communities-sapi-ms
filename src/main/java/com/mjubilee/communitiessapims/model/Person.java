@@ -1,9 +1,6 @@
 package com.mjubilee.communitiessapims.model;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
-
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -12,7 +9,7 @@ import jakarta.persistence.Id;
 public class Person {
 	@Id
 	@GeneratedValue
-	private BigDecimal id;
+	private Long id;
 	private String firstName;
 	private String lastName;
 	private LocalDate dob;
@@ -21,7 +18,7 @@ public class Person {
 	public Person() {
 	}
 
-	public Person(BigDecimal id, String firstName, String lastName, LocalDate dob, String email) {
+	public Person(Long id, String firstName, String lastName, LocalDate dob, String email) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
@@ -30,11 +27,11 @@ public class Person {
 		this.email = email;
 	}
 
-	public BigDecimal getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(BigDecimal id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
