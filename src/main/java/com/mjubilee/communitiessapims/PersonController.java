@@ -1,6 +1,7 @@
 package com.mjubilee.communitiessapims;
 
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,10 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.mjubilee.communitiessapims.exception.PersonNotFoundException;
 import com.mjubilee.communitiessapims.model.Person;
@@ -38,20 +42,22 @@ public class PersonController {
 	}
 	
 	@GetMapping("/persons/{id}")
-	public Person retrievePersonById(@PathVariable Long id) {
-		
+	public ResponseEntity<Person> retrievePersonById(@PathVariable Long id) {		
 		String port = environment.getProperty("local.server.port");
 		String host = environment.getProperty("HOSTNAME");
 		
 		this.log.info( host + " -- " + port + " -- retrievePersonById -- Retrieve specific person infromation by id");
 		
 		Optional<Person> person = this.personRepo.findById(id);
-		
+
 		if (person.isEmpty()) {			
 			throw new PersonNotFoundException("Data with id = " + id + " can not be found.");
 		}
-		
-		return person.get();
+		return new ResponseEntity<Person>(person.get(),HttpStatus.OK);
 	}
+	
+	
+	
+	
 	
 }
