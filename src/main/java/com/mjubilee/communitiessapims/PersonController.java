@@ -14,12 +14,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.mjubilee.communitiessapims.exception.PersonNotFoundException;
 import com.mjubilee.communitiessapims.model.Person;
 import com.mjubilee.communitiessapims.repository.PersonRepository;
+
+import jakarta.validation.Valid;
 
 @RestController
 public class PersonController {
@@ -54,6 +58,22 @@ public class PersonController {
 			throw new PersonNotFoundException("Data with id = " + id + " can not be found.");
 		}
 		return new ResponseEntity<Person>(person.get(),HttpStatus.OK);
+	}
+	
+	@PostMapping("/persons")
+	public ResponseEntity<Person> createPerson(@Valid @RequestBody Person person) {		
+		String port = environment.getProperty("local.server.port");
+		String host = environment.getProperty("HOSTNAME");
+		
+		this.log.info( host + " -- " + port + " -- createPersonBy -- Input a person infromation");
+		
+		Person savedPerson = personRepo.save(person);				
+		
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}")
+				.buildAndExpand(savedPerson.getId())
+				.toUri();
+		return ResponseEntity.created(location).build();
 	}
 	
 	
