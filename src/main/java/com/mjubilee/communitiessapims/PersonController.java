@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -76,7 +77,27 @@ public class PersonController {
 		return ResponseEntity.created(location).build();
 	}
 	
-	
+	@DeleteMapping("/persons/{id}")
+	public ResponseEntity<Person> deletePerson(@PathVariable Long id) {
+		String port = environment.getProperty("local.server.port");
+		String host = environment.getProperty("HOSTNAME");
+		
+		this.log.info( host + " -- " + port + " -- retrievePersonById -- Retrieve specific person infromation by id");
+		
+		Optional<Person> person = this.personRepo.findById(id);
+
+		if (person.isEmpty()) {			
+			throw new PersonNotFoundException("Data with id = " + id + " can not be found.");
+		}
+		
+		this.personRepo.delete(person.get());
+		
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}")
+				.buildAndExpand(person.get().getId())
+				.toUri();
+		return ResponseEntity.created(location).build();
+	}
 	
 	
 	
