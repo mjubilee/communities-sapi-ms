@@ -1,27 +1,36 @@
 package com.mjubilee.communitiessapims.model;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class Person {
+	
 	@Id
 	@GeneratedValue
-	private BigDecimal id;
+	@Column(nullable=false, updatable=false)
+	private Long id;
+	
+	@Size(min=3, message="First name must be minimum 3 characters.")
 	private String firstName;
+
+	@Size(min=3, message="Last name must be minimum 3 characters.")
 	private String lastName;
+	
+	@Past(message="Date of birth can not be today or in the future")
 	private LocalDate dob;
 	private String email;
 	
 	public Person() {
 	}
 
-	public Person(BigDecimal id, String firstName, String lastName, LocalDate dob, String email) {
+	public Person(Long id, String firstName, String lastName, LocalDate dob, String email) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
@@ -30,11 +39,11 @@ public class Person {
 		this.email = email;
 	}
 
-	public BigDecimal getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(BigDecimal id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -68,12 +77,6 @@ public class Person {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	@Override
-	public String toString() {
-		return "Person [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", email="
-				+ email + "]";
 	}
 			
 }
