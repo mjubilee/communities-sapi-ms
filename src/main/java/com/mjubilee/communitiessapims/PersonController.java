@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -82,7 +83,7 @@ public class PersonController {
 		String port = environment.getProperty("local.server.port");
 		String host = environment.getProperty("HOSTNAME");
 		
-		this.log.info( host + " -- " + port + " -- retrievePersonById -- Retrieve specific person infromation by id");
+		this.log.info( host + " -- " + port + " -- deletePerson -- Remove a person by id");
 		
 		Optional<Person> person = this.personRepo.findById(id);
 
@@ -99,6 +100,31 @@ public class PersonController {
 		return ResponseEntity.created(location).build();
 	}
 	
-	
+	@PutMapping("/persons")
+	public ResponseEntity<Person> updatePerson(@Valid @RequestBody Person person) {		
+		String port = environment.getProperty("local.server.port");
+		String host = environment.getProperty("HOSTNAME");
+		
+		this.log.info( host + " -- " + port + " -- updatePerson -- Update a person infromation");
+		
+		Optional<Person> queryPerson = this.personRepo.findById(person.getId());
+
+		if (queryPerson.isEmpty()) {			
+			throw new PersonNotFoundException("Data with id = " + person.getId() + " can not be found.");
+		}
+		
+		queryPerson.get().setFirstName(person.getFirstName());
+		queryPerson.get().setLastName(person.getLastName());
+		queryPerson.get().setDob(person.getDob());
+		queryPerson.get().setEmail(person.getEmail());
+		
+		Person savedPerson = personRepo.save(queryPerson.get());				
+		
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}")
+				.buildAndExpand(savedPerson.getId())
+				.toUri();
+		return ResponseEntity.created(location).build();
+	}
 	
 }
