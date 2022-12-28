@@ -91,5 +91,4 @@ public class Person {
 		this.categoryList = categoryList;
 	}
 		
-	
-}
+	}
