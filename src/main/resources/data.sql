@@ -61,3 +61,4 @@ values (3002, 2001);
 insert into community_community_group (community_group_id, community_id)
 values (3003, 2002);
 
+
