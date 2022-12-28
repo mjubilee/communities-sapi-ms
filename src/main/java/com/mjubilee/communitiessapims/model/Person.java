@@ -1,11 +1,12 @@
 package com.mjubilee.communitiessapims.model;
 
 import java.time.LocalDate;
-
+import java.util.List;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 
@@ -26,6 +27,9 @@ public class Person {
 	@Past(message="Date of birth can not be today or in the future")
 	private LocalDate dob;
 	private String email;
+	
+	@ManyToMany(mappedBy = "personList")
+	List<Category> categoryList;
 	
 	public Person() {
 	}
@@ -78,5 +82,13 @@ public class Person {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-			
+
+	public List<Category> getCategoryList() {
+		return categoryList;
+	}
+
+	public void setCategoryList(List<Category> categoryList) {
+		this.categoryList = categoryList;
+	}
+		
 }
