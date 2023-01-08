@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -43,6 +44,20 @@ public class PersonController {
 		this.log.info( host + " -- " + port + " -- retrievePersonList -- Retrieve all person");
 		
 		return this.personRepo.findAll();
+	}
+	
+	@GetMapping("/persons/profile")
+	public ResponseEntity<Person> retrievePersonProfile(@RequestParam Long id) {
+		String port = environment.getProperty("local.server.port");
+		String host = environment.getProperty("HOSTNAME");
+		
+		this.log.info( host + " -- " + port + " -- retrievePersonProfile -- Retrieve a person profile");
+		Optional<Person> person = this.personRepo.findById(id);
+
+		if (person.isEmpty()) {			
+			throw new PersonNotFoundException("Data with id = " + id + " can not be found.");
+		}
+		return new ResponseEntity<Person>(person.get(),HttpStatus.OK);
 	}
 	
 	@GetMapping("/persons/{id}")
